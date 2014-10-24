@@ -108,7 +108,7 @@ cat(&quot;x is a&quot;, class(x), &quot;, y is a&quot;, class(y), &quot;and z is
 <pre><code>## x is a numeric , y is a character and z is logical
 </code></pre>
 
-<p>(<code>cat()</code> is a convenience function which concatenates the values passed in)</p>
+<p>(<code>cat()</code> is a convenience function which prints the input values)</p>
 
   </article>
   <!-- Presenter Notes -->
@@ -125,11 +125,13 @@ cat(&quot;x is a&quot;, class(x), &quot;, y is a&quot;, class(y), &quot;and z is
 <li>Vector (1-dimensional container for data of <strong>one</strong> type)</li>
 <li>Matrix (2-dimensional container for data of <strong>one</strong> type)</li>
 <li>Factor (represents a categorical variable)</li>
+<li>Lists are collections named values</li>
 <li><strong>Data Frame</strong> (similar to a SQL table or a MS Excel spreadsheet)</li>
 </ul>
 
 <pre><code class="r">vec &lt;- c(1, 2, 3, 4)
 fac &lt;- as.factor(vec)
+lis &lt;- list(a = 1, b = c(1, 2, 3), c = &quot;hello&quot;)
 mat &lt;- matrix(rnorm(100, -2, 4.5), 25, 4)
 df &lt;- data.frame(rnorm(c(100, 2), c(10, 20), c(12, 22)))
 horsemen &lt;- as.factor(c(&quot;White&quot;, &quot;Red&quot;, &quot;Black&quot;, &quot;Pale&quot;))
@@ -169,6 +171,59 @@ ls()
 
 <slide class="" id="slide-6" style="background:;">
   <hgroup>
+    <h2>Other Useful Functions</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>The usual math functions are available in R as expected: <code>sqrt</code>, <code>sum</code>, <code>log</code>, <code>exp</code>, etc.  Alongside, these may also prove useful:</p>
+
+<ul>
+<li><code>str()</code> provides a short summary of the value passed in</li>
+<li><code>as.Date</code> converts character variables to dates</li>
+<li><code>apply</code> takes a vector or data frame and a function, and applies the function to each element</li>
+<li><code>paste()</code> is useful for concatenating strings together into 1 string</li>
+<li><code>gsub()</code> substitutes substrings within strings</li>
+<li><code>rep()</code> repeates the passed in value a specified number of times</li>
+<li><code>plot()</code> is a versatile function for plotting lines, scatter plots, etc.</li>
+<li><code>hist()</code> takes a vector and produces a histogram of the data; internally calls <code>plot()</code></li>
+</ul>
+
+<p>Furthermore, packages built for R allow for more complicated modelling, accessing a variety of databases, interacting with data from other systems, and convenience methods for problems in specific domains.  There are too many to cover.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-7" style="background:;">
+  <hgroup>
+    <h2>Writing functions and control-flow</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>R allows you to write your own scripts, as well as custom-made functions:</p>
+
+<pre><code class="r">upperLower &lt;- function(frame) {
+  orders &lt;- frame$orders[frame$orders &gt; 0]
+  return(list(upper = max(orders) / mean(orders), lower = min(orders) / mean(orders)))
+}
+
+splitFrame &lt;- function(frame) {
+  frame$highGMS = FALSE
+  for(i in 1:nrow(frame)) {
+    if(frame$gms &gt; 10000) {
+      frame$highGMS[i] = TRUE
+    }
+  }
+  frame
+}
+</code></pre>
+
+<p>R supports <code>if() {} else {}</code> statements as well as &#39;&#39;for&#39;&#39; and &#39;&#39;while&#39;&#39; loops.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-8" style="background:;">
+  <hgroup>
     <h2>Working With Data Frames I</h2>
   </hgroup>
   <article data-timings="">
@@ -200,7 +255,7 @@ df$date &lt;- as.Date(df$date, format = &quot;%d-%b-%y&quot;)
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-7" style="background:;">
+<slide class="" id="slide-9" style="background:;">
   <hgroup>
     <h2>Working With Data Frames II</h2>
   </hgroup>
@@ -230,7 +285,7 @@ df$date &lt;- as.Date(df$date, format = &quot;%d-%b-%y&quot;)
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-8" style="background:;">
+<slide class="" id="slide-10" style="background:;">
   <hgroup>
     <h2>Working With Data Frames III</h2>
   </hgroup>
@@ -253,7 +308,44 @@ this boolean vector into a <code>[]</code> returns a data frame for all selectio
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-9" style="background:;">
+<slide class="" id="slide-11" style="background:;">
+  <hgroup>
+    <h2>Basic Regression Modeling</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>To run a basic linear model, R provides the <code>lm()</code> function in the <code>stats</code> package;  Using the example data previously loaded:</p>
+
+<pre><code class="r">model &lt;- lm(log(gms) ~ log(orders) + log(clicks), df, (mid == 3184) &amp; (orders &gt; 0))
+summary(model)
+</code></pre>
+
+<pre><code>## 
+## Call:
+## lm(formula = log(gms) ~ log(orders) + log(clicks), data = df, 
+##     subset = (mid == 3184) &amp; (orders &gt; 0))
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.95797 -0.15339  0.00484  0.22698  0.87321 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  4.56359    0.17265  26.432   &lt;2e-16 ***
+## log(orders)  1.06662    0.04852  21.982   &lt;2e-16 ***
+## log(clicks) -0.01912    0.04046  -0.473    0.639    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.3574 on 51 degrees of freedom
+## Multiple R-squared:  0.9418, Adjusted R-squared:  0.9395 
+## F-statistic: 412.8 on 2 and 51 DF,  p-value: &lt; 2.2e-16
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-12" style="background:;">
   <hgroup>
     <h2>split-apply-combine with <code>plyr</code></h2>
   </hgroup>
@@ -282,43 +374,20 @@ head(grouped, n = 6)
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-10" style="background:;">
-  <hgroup>
-    <h2>Plotting with <code>ggplot2</code> - (I)</h2>
-  </hgroup>
-  <article data-timings="">
-    <p>Visualization is an important component of statistical analysis and the <code>ggplot2</code> package can generate intuitive plots</p>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-11" style="background:;">
-  <hgroup>
-    <h2>Plotting with <code>ggplot2</code> - (II)</h2>
-  </hgroup>
-  <article data-timings="">
-    
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-12" style="background:;">
-  <hgroup>
-    <h2>Plotting with <code>ggplot2</code> - (III)</h2>
-  </hgroup>
-  <article data-timings="">
-    
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
 <slide class="" id="slide-13" style="background:;">
   <hgroup>
-    <h2>Plotting with <code>ggplot2</code> - (IV)</h2>
+    <h2>Plotting with <code>ggplot2</code></h2>
   </hgroup>
   <article data-timings="">
-    
+    <p>Visualization is an important component of statistical analysis and the <code>ggplot2</code> package can generate intuitive plots.  The package adds layers on top of the base <code>ggplot()</code> result, thus composing the result:</p>
+
+<pre><code class="r">require(ggplot2)
+g &lt;- ggplot(data = df, aes(clicks, gms))
+g + geom_point() + ggtitle(&quot;Clicks vs Orders&quot;)
+</code></pre>
+
+<p>More Examples...</p>
+
   </article>
   <!-- Presenter Notes -->
 </slide>
@@ -347,6 +416,7 @@ Demo!</p>
 <li><code>ggplot2</code>: <a href="http://zevross.com/blog/2014/08/04/beautiful-plotting-in-r-a-ggplot2-cheatsheet-3/">http://zevross.com/blog/2014/08/04/beautiful-plotting-in-r-a-ggplot2-cheatsheet-3/</a></li>
 <li>R-Bloggers site keeps up-to-date with all things R: <a href="http://www.r-bloggers.com/">http://www.r-bloggers.com/</a></li>
 <li><code>shiny</code> tutorial: <a href="http://shiny.rstudio.com/tutorial/">http://shiny.rstudio.com/tutorial/</a></li>
+<li>This presentation: <a href="https://github.com/pavelgrib/ProgrammingR.git">https://github.com/pavelgrib/ProgrammingR.git</a></li>
 </ul>
 
   </article>
@@ -396,49 +466,49 @@ Demo!</p>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=6 title='Working With Data Frames I'>
+        data-slide=6 title='Other Useful Functions'>
          6
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=7 title='Working With Data Frames II'>
+        data-slide=7 title='Writing functions and control-flow'>
          7
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=8 title='Working With Data Frames III'>
+        data-slide=8 title='Working With Data Frames I'>
          8
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=9 title='split-apply-combine with <code>plyr</code>'>
+        data-slide=9 title='Working With Data Frames II'>
          9
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=10 title='Plotting with <code>ggplot2</code> - (I)'>
+        data-slide=10 title='Working With Data Frames III'>
          10
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=11 title='Plotting with <code>ggplot2</code> - (II)'>
+        data-slide=11 title='Basic Regression Modeling'>
          11
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=12 title='Plotting with <code>ggplot2</code> - (III)'>
+        data-slide=12 title='split-apply-combine with <code>plyr</code>'>
          12
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=13 title='Plotting with <code>ggplot2</code> - (IV)'>
+        data-slide=13 title='Plotting with <code>ggplot2</code>'>
          13
       </a>
     </li>

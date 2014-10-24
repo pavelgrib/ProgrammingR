@@ -56,7 +56,7 @@ cat("x is a", class(x), ", y is a", class(y), "and z is", class(z))
 ## x is a numeric , y is a character and z is logical
 ```
 
-(`cat()` is a convenience function which concatenates the values passed in)
+(`cat()` is a convenience function which prints the input values)
 
 ---
 
@@ -65,11 +65,13 @@ A few other data types worth learning:
 + Vector (1-dimensional container for data of __one__ type)
 + Matrix (2-dimensional container for data of __one__ type)
 + Factor (represents a categorical variable)
++ Lists are collections named values
 + __Data Frame__ (similar to a SQL table or a MS Excel spreadsheet)
 
 ```r
 vec <- c(1, 2, 3, 4)
 fac <- as.factor(vec)
+lis <- list(a = 1, b = c(1, 2, 3), c = "hello")
 mat <- matrix(rnorm(100, -2, 4.5), 25, 4)
 df <- data.frame(rnorm(c(100, 2), c(10, 20), c(12, 22)))
 horsemen <- as.factor(c("White", "Red", "Black", "Pale"))
@@ -103,6 +105,45 @@ ls()
 
 ---
 
+
+## Other Useful Functions
+The usual math functions are available in R as expected: `sqrt`, `sum`, `log`, `exp`, etc.  Alongside, these may also prove useful:
++ `str()` provides a short summary of the value passed in
++ `as.Date` converts character variables to dates
++ `apply` takes a vector or data frame and a function, and applies the function to each element
++ `paste()` is useful for concatenating strings together into 1 string
++ `gsub()` substitutes substrings within strings
++ `rep()` repeates the passed in value a specified number of times
++ `plot()` is a versatile function for plotting lines, scatter plots, etc.
++ `hist()` takes a vector and produces a histogram of the data; internally calls `plot()`
+
+Furthermore, packages built for R allow for more complicated modelling, accessing a variety of databases, interacting with data from other systems, and convenience methods for problems in specific domains.  There are too many to cover.
+
+---
+
+## Writing functions and control-flow
+R allows you to write your own scripts, as well as custom-made functions:
+
+```r
+upperLower <- function(frame) {
+  orders <- frame$orders[frame$orders > 0]
+  return(list(upper = max(orders) / mean(orders), lower = min(orders) / mean(orders)))
+}
+
+splitFrame <- function(frame) {
+  frame$highGMS = FALSE
+  for(i in 1:nrow(frame)) {
+    if(frame$gms > 10000) {
+      frame$highGMS[i] = TRUE
+    }
+  }
+  frame
+}
+```
+
+R supports `if() {} else {}` statements as well as ''for'' and ''while'' loops.
+
+---
 
 ## Working With Data Frames I
 
@@ -180,6 +221,40 @@ this boolean vector into a `[]` returns a data frame for all selection where `TR
 
 ---
 
+## Basic Regression Modeling
+To run a basic linear model, R provides the `lm()` function in the `stats` package;  Using the example data previously loaded:
+
+```r
+model <- lm(log(gms) ~ log(orders) + log(clicks), df, (mid == 3184) & (orders > 0))
+summary(model)
+```
+
+```
+## 
+## Call:
+## lm(formula = log(gms) ~ log(orders) + log(clicks), data = df, 
+##     subset = (mid == 3184) & (orders > 0))
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.95797 -0.15339  0.00484  0.22698  0.87321 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)  4.56359    0.17265  26.432   <2e-16 ***
+## log(orders)  1.06662    0.04852  21.982   <2e-16 ***
+## log(clicks) -0.01912    0.04046  -0.473    0.639    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.3574 on 51 degrees of freedom
+## Multiple R-squared:  0.9418,	Adjusted R-squared:  0.9395 
+## F-statistic: 412.8 on 2 and 51 DF,  p-value: < 2.2e-16
+```
+
+---
+
+
 ## split-apply-combine with `plyr`
 First install the `plyr` package with `install.packages("plyr")` and load it:
 
@@ -207,26 +282,15 @@ head(grouped, n = 6)
 ---
 
 
-## Plotting with `ggplot2` - (I)
-Visualization is an important component of statistical analysis and the `ggplot2` package can generate intuitive plots
+## Plotting with `ggplot2`
+Visualization is an important component of statistical analysis and the `ggplot2` package can generate intuitive plots.  The package adds layers on top of the base `ggplot()` result, thus composing the result:
 
----
-
-
-## Plotting with `ggplot2` - (II)
-
-
----
-
-
-## Plotting with `ggplot2` - (III)
-
-
----
-
-
-## Plotting with `ggplot2` - (IV)
-
+```r
+require(ggplot2)
+g <- ggplot(data = df, aes(clicks, gms))
+g + geom_point() + ggtitle("Clicks vs Orders")
+```
+More Examples...
 
 ---
 
@@ -244,5 +308,6 @@ Demo!
 - `ggplot2`: http://zevross.com/blog/2014/08/04/beautiful-plotting-in-r-a-ggplot2-cheatsheet-3/
 - R-Bloggers site keeps up-to-date with all things R: http://www.r-bloggers.com/
 - `shiny` tutorial: http://shiny.rstudio.com/tutorial/
+- This presentation: https://github.com/pavelgrib/ProgrammingR.git
 
 ---
