@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Statistical Programming with R</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Statistical Programming with R">
+  <meta name="author" content="Paul Gribelyuk">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>Statistical Programming with R</h1>
+    <h2></h2>
+    <p>Paul Gribelyuk<br/></p>
+  </hgroup>
+    <a href="https://github.com/pavelgrib/ProgrammingR/zipball/gh-pages" class="example">
+     Download
+    </a>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <hgroup>
+    <h2>Getting Started</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Setup is very easy</p>
+
+<ul>
+<li>Download R from CRAN (Comprehensive R Archive Network)
+
+<ul>
+<li><a href="http://cran.r-project.org">http://cran.r-project.org</a></li>
+<li>Unpack and install per instructions</li>
+<li>Comes bundled with an editor, but we will use RStudio</li>
+</ul></li>
+<li>Install the RStudio editor
+
+<ul>
+<li><a href="http://www.rstudio.com/products/rstudio/download/">http://www.rstudio.com/products/rstudio/download/</a></li>
+</ul></li>
+<li>After launching RStudio, install packages in 2 ways:
+
+<ul>
+<li>Use the Console: e.g. <code>install.packages(plyr)</code></li>
+<li>Use the GUI: Tools -&gt; Install Packages ...</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-2" style="background:;">
+  <hgroup>
+    <h2>Basics - Navigating in RStudio</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>R code is executed in the <strong><em>Editor</em></strong> or the <strong><em>Console</em></strong>.</li>
+<li>The UI provides windows for viewing data, plots, package documentation, variables, as well as code versionining</li>
+<li>The Console does tab-completion and provides documentation help
+<img src="empty.png" alt=""></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>Basics - Basic R Data Types</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>R has three basic data types:</p>
+
+<pre><code class="r">x &lt;- 1.0
+y &lt;- &quot;abc&quot;
+z &lt;- FALSE
+cat(&quot;x is a&quot;, class(x), &quot;, y is a&quot;, class(y), &quot;and z is&quot;, class(z))
+</code></pre>
+
+<pre><code>## x is a numeric , y is a character and z is logical
+</code></pre>
+
+<p>(<code>cat()</code> is a convenience function which concatenates the values passed in)</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>Basics - Other Data Types</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>A few other data types worth learning:</p>
+
+<ul>
+<li>Vector (1-dimensional container for data of <strong>one</strong> type)</li>
+<li>Matrix (2-dimensional container for data of <strong>one</strong> type)</li>
+<li>Factor (represents a categorical variable)</li>
+<li><strong>Data Frame</strong> (similar to a SQL table or a MS Excel spreadsheet)</li>
+</ul>
+
+<pre><code class="r">vec &lt;- c(1, 2, 3, 4)
+fac &lt;- as.factor(vec)
+mat &lt;- matrix(rnorm(100, -2, 4.5), 25, 4)
+df &lt;- data.frame(rnorm(c(100, 2), c(10, 20), c(12, 22)))
+horsemen &lt;- as.factor(c(&quot;White&quot;, &quot;Red&quot;, &quot;Black&quot;, &quot;Pale&quot;))
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-5" style="background:;">
+  <hgroup>
+    <h2>Basics - A Note about the Environment</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Code runs within an <em>environment</em>, and the variables used are saved in that environment; To find out the contents call:</p>
+
+<pre><code class="r">ls()
+</code></pre>
+
+<pre><code>##  [1] &quot;df&quot;        &quot;encoding&quot;  &quot;fac&quot;       &quot;horsemen&quot;  &quot;inputFile&quot;
+##  [6] &quot;mat&quot;       &quot;vec&quot;       &quot;x&quot;         &quot;y&quot;         &quot;z&quot;
+</code></pre>
+
+<p>To remove variables from the environment:</p>
+
+<pre><code class="r">rm(horsemen)
+ls()
+</code></pre>
+
+<pre><code>## [1] &quot;df&quot;        &quot;encoding&quot;  &quot;fac&quot;       &quot;inputFile&quot; &quot;mat&quot;       &quot;vec&quot;      
+## [7] &quot;x&quot;         &quot;y&quot;         &quot;z&quot;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-6" style="background:;">
+  <hgroup>
+    <h2>Working With Data Frames I</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Think of a <strong>Data Frame</strong> as an in-memory SQL table containing various columns (of different type) and rows.  We can read and write data from and to a file:</p>
+
+<pre><code class="r">df &lt;- read.csv(&quot;../rTutorial/data.csv&quot;, header = FALSE)
+colnames(df) &lt;- c(&quot;date&quot;, &quot;mid&quot;, &quot;sid&quot;, &quot;clicks&quot;, &quot;orders&quot;, &quot;gms&quot;)
+df$date &lt;- as.Date(df$date, format = &quot;%d-%b-%y&quot;)
+</code></pre>
+
+<pre><code class="r">write.csv(&quot;../rTutorial/new_data.csv&quot;)
+</code></pre>
+
+<p>and view useful information about it:</p>
+
+<pre><code class="r">str(df)
+</code></pre>
+
+<pre><code>## &#39;data.frame&#39;:    10000 obs. of  6 variables:
+##  $ date  : Date, format: &quot;2011-01-01&quot; &quot;2011-01-01&quot; ...
+##  $ mid   : int  122 122 122 122 122 122 122 122 122 122 ...
+##  $ sid   : int  9020 9020 9020 9020 23803 23803 44769 102935 241849 241849 ...
+##  $ clicks: int  0 0 21 3 119 1 545 1 0 12 ...
+##  $ orders: int  0 0 3 0 19 0 15 0 0 0 ...
+##  $ gms   : num  0 0 126 0 626 ...
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-7" style="background:;">
+  <hgroup>
+    <h2>Working With Data Frames II</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>The &#39;summary()&#39; function is a multi-purpose function which displays relevant statistics about each column (it has different uses depending on the type of variable passed in)</p>
+
+<pre><code class="r">summary(df)
+</code></pre>
+
+<pre><code>##       date                 mid             sid              clicks       
+##  Min.   :2011-01-01   Min.   :  122   Min.   :   9020   Min.   :    0.0  
+##  1st Qu.:2011-01-01   1st Qu.: 2417   1st Qu.: 569279   1st Qu.:    1.0  
+##  Median :2011-01-01   Median :13828   Median :1386540   Median :    4.0  
+##  Mean   :2011-01-01   Mean   :14382   Mean   :1255318   Mean   :  107.4  
+##  3rd Qu.:2011-01-01   3rd Qu.:24572   3rd Qu.:1872550   3rd Qu.:   23.0  
+##  Max.   :2011-01-01   Max.   :35538   Max.   :2592795   Max.   :46712.0  
+##      orders             gms         
+##  Min.   :   0.00   Min.   :    0.0  
+##  1st Qu.:   0.00   1st Qu.:    0.0  
+##  Median :   0.00   Median :    0.0  
+##  Mean   :   3.56   Mean   :  382.7  
+##  3rd Qu.:   1.00   3rd Qu.:   90.8  
+##  Max.   :1082.00   Max.   :70396.2
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-8" style="background:;">
+  <hgroup>
+    <h2>Working With Data Frames III</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>We will typically be interested in looking at subsets of our data</p>
+
+<pre><code class="r"># first 100 rows and columns 2, 3, 4, and 5
+subset0 &lt;- df[1:100, 2:5]
+# all rows with mid 3184 and columns &quot;orders&quot; and &quot;gms&quot;
+subset1 &lt;- df[df$mid == 3184, c(&quot;orders&quot;, &quot;gms&quot;)]
+# vector of dates when mid 25003 had GMS &gt; $10k
+subset2 &lt;- df$date[(df$mid == 25003) &amp; (df$gms &gt; 10000)]
+</code></pre>
+
+<p>Subsetting data in R is very flexible and allows you to quickly find and explore the relevant dataset.  Each entry
+passed in (such as <code>df$mid == 25003</code>) is a boolean vector having the value <code>TRUE</code> where the MID matches 25003.  Passing
+this boolean vector into a <code>[]</code> returns a data frame for all selection where <code>TRUE</code> happened.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-9" style="background:;">
+  <hgroup>
+    <h2>split-apply-combine with <code>plyr</code></h2>
+  </hgroup>
+  <article data-timings="">
+    <p>First install the <code>plyr</code> package with <code>install.packages(&quot;plyr&quot;)</code> and load it:</p>
+
+<pre><code class="r">require(plyr)
+</code></pre>
+
+<p>A common operation encountered in data analysis is splitting the data frame by a criteria (e.g. for each MID), applying functions to each block e.g. the mean of the GMS column, and the max number of orders), and returning a data frame with the results.  The <code>plyr</code> code is simple:</p>
+
+<pre><code class="r">grouped &lt;- ddply(df, .(mid), summarize, avg_gms = mean(gms), max_orders = max(orders))
+head(grouped, n = 6)
+</code></pre>
+
+<pre><code>##   mid  avg_gms max_orders
+## 1 122 130.8494         75
+## 2 133   0.0000          0
+## 3 147 387.6045         42
+## 4 216 188.5871         17
+## 5 560   0.0000          0
+## 6 732   0.0000          0
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-10" style="background:;">
+  <hgroup>
+    <h2>Plotting with <code>ggplot2</code> - (I)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Visualization is an important component of statistical analysis and the <code>ggplot2</code> package can generate intuitive plots</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-11" style="background:;">
+  <hgroup>
+    <h2>Plotting with <code>ggplot2</code> - (II)</h2>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-12" style="background:;">
+  <hgroup>
+    <h2>Plotting with <code>ggplot2</code> - (III)</h2>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-13" style="background:;">
+  <hgroup>
+    <h2>Plotting with <code>ggplot2</code> - (IV)</h2>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-14" style="background:;">
+  <hgroup>
+    <h2>The <code>shiny</code> web framework for sharing results</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><code>shiny</code> is a package developed by RStudio to allow users of R to make their visualizations and results available and interactive in any browser.  The package expects <code>ui.R</code> and <code>server.R</code> to be present in the current directory before running <code>runApp()</code>.  The two files specify the layout of the UI and the data processing, respectively.  The below code was taken from the <code>shiny</code> tutorial:
+<img src="shiny_example.png" alt="" title="Example of ui.R and server.R for `shiny`">
+Demo!</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-15" style="background:;">
+  <hgroup>
+    <h2>Further References</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Introductory R Manual: <a href="http://renkun.me/learnR/">http://renkun.me/learnR/</a></li>
+<li><code>plyr</code> tutorial: <a href="http://www.slideshare.net/hadley/01-intro-1690565">http://www.slideshare.net/hadley/01-intro-1690565</a></li>
+<li><code>ggplot2</code>: <a href="http://zevross.com/blog/2014/08/04/beautiful-plotting-in-r-a-ggplot2-cheatsheet-3/">http://zevross.com/blog/2014/08/04/beautiful-plotting-in-r-a-ggplot2-cheatsheet-3/</a></li>
+<li>R-Bloggers site keeps up-to-date with all things R: <a href="http://www.r-bloggers.com/">http://www.r-bloggers.com/</a></li>
+<li><code>shiny</code> tutorial: <a href="http://shiny.rstudio.com/tutorial/">http://shiny.rstudio.com/tutorial/</a></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-16" style="background:;">
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='Getting Started'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Basics - Navigating in RStudio'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Basics - Basic R Data Types'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Basics - Other Data Types'>
+         4
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title='Basics - A Note about the Environment'>
+         5
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=6 title='Working With Data Frames I'>
+         6
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=7 title='Working With Data Frames II'>
+         7
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=8 title='Working With Data Frames III'>
+         8
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=9 title='split-apply-combine with <code>plyr</code>'>
+         9
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=10 title='Plotting with <code>ggplot2</code> - (I)'>
+         10
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=11 title='Plotting with <code>ggplot2</code> - (II)'>
+         11
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=12 title='Plotting with <code>ggplot2</code> - (III)'>
+         12
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=13 title='Plotting with <code>ggplot2</code> - (IV)'>
+         13
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=14 title='The <code>shiny</code> web framework for sharing results'>
+         14
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=15 title='Further References'>
+         15
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=16 title=''>
+         16
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>
