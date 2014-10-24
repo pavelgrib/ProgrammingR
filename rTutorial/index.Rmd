@@ -103,6 +103,22 @@ Furthermore, packages built for R allow for more complicated modelling, accessin
 
 ---
 
+
+## Some Other Amazing Packages
++ GoogleVis: a Google package for visualization
++ rCharts: awesome dynamic charts package
++ slidify: for creating presentations using R Markdown
++ sqldf: for writing SQL against data frames
++ stringr: string manipulation library
++ tseries and zoo: timeseries functionality
++ RMySQL, RPostgreSQL, rmongodb, RODBC, RDI
++ RCurl for http requests
++ reshape2: a data frame manipulation tool
++ foreach: write fast parallel loops in R
+
+---
+
+
 ## Writing functions and control-flow
 R allows you to write your own scripts, as well as custom-made functions:
 ```{r, eval=FALSE}
@@ -213,6 +229,7 @@ More Examples...
 Demo!
 
 ---
+
 
 ## Further References
 - Introductory R Manual: http://renkun.me/learnR/
